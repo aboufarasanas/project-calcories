@@ -1,7 +1,2 @@
-# Welcome to streamlit
+Many people face problems in calculating the number of calories their body needs, the amount of protein and carbohydrates, and so on. This application helps to calculate these things in a simple and easy way.
 
-This is the app you get when you run `streamlit hello`, extracted as its own app.
-
-Edit [Hello.py](./Hello.py) to customize this app to your heart's desire. ❤️
-
-Check it out on [Streamlit Community Cloud](https://st-hello-app.streamlit.app/)
