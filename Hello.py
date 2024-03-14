@@ -1,51 +1,91 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
 
-LOGGER = get_logger(__name__)
+# Add a title
+st.title("Nutritional Requirements Calculator")
 
+# Step 1: Define the necessary variables
+gender = st.selectbox("Select your gender", ["Male", "Female"])
+weight = st.number_input("Enter your weight in kg", min_value=0.00, max_value=400.00, step=1.00)
+height = st.number_input("Enter your height in cm", min_value=0.00, max_value=250.00, step=1.00)
+age = st.number_input("Enter your age", min_value=1, max_value=120, step=1)
+activity_level = st.selectbox("Select your activity level", ["Sedentary", "Lightly active", "Moderately active", "Very active", "Extra active"])
+dietary_restrictions = st.selectbox("Select your dietary restrictions (if any)", ["None", "Vegan", "Gluten-free"])
+sport_type = st.selectbox("Select your sport type", ["Endurance", "Power", "Mixed"])
+goal = st.selectbox("Select your goal", ["Weight loss", "Muscle gain", "Maintaining muscle mass"])
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+# Add a button to calculate the nutritional requirements
+if st.button("Calculate"):
+    # Step 2: Calculate the nutritional requirements
+    if gender == "Male":
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+    else:
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161
 
-    st.write("# Welcome to Streamlit! 👋")
+    if activity_level == "Sedentary":
+        tdee = bmr * 1.2
+        protein_ratio = 1.3 * weight
+        carb_ratio = 2 * weight
+        fat_ratio = (tdee * 0.25) / 9
+    elif activity_level == "Lightly active":
+        tdee = bmr * 1.375
+        protein_ratio = 1.7 * weight
+        carb_ratio = 2.5 * weight
+        fat_ratio = (tdee * 0.25) / 9
+    elif activity_level == "Moderately active":
+        tdee = bmr * 1.55
+        protein_ratio = 2 * weight
+        carb_ratio = 3 * weight
+        fat_ratio = (tdee * 0.25) / 9
+    elif activity_level == "Very active":
+        tdee = bmr * 1.725
+        protein_ratio = 2.1 * weight
+        carb_ratio = 3.5 * weight
+        fat_ratio = (tdee * 0.25) / 9
+    else:
+        tdee = bmr * 1.9
+        protein_ratio = 2.3 * weight
+        carb_ratio = 4 * weight
+        fat_ratio = (tdee * 0.25) / 9
 
-    st.sidebar.success("Select a demo above.")
+    # Adjust macronutrient ratios based on the goal
+    if goal == "Weight loss":
+        protein_ratio += 5
+        carb_ratio -= 10
+    elif goal == "Muscle gain":
+        protein_ratio += 30
+        carb_ratio += 60
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+    # Step 4: Calculate the macronutrient amounts
+    protein_amount = protein_ratio
+    carb_amount = carb_ratio
+    fat_amount = fat_ratio
 
+    # Step 5: Display the results
+    st.write(f"Your Total Daily Energy Expenditure (TDEE) is: {tdee} calories per day.")
+    st.write("Your recommended macronutrient amounts are:")
+    st.write(f"- Protein: {protein_amount:.1f} grams.")
+    st.write(f"- Carbohydrates: {carb_amount:.1f} grams.")
+    st.write(f"- Fats: {fat_amount:.1f} grams.")
 
-if __name__ == "__main__":
-    run()
+    # Step 6: Suggest meal ideas based on dietary restrictions
+    if "vegan" in dietary_restrictions.lower():
+        st.write("Here are some vegan meal ideas:")
+        st.write("- Tofu stir-fry with mixed vegetables and brown rice")
+        st.write("- Lentil soup with whole grain bread")
+        st.write("- Quinoa salad with chickpeas, cucumber, tomatoes, and avocado")
+        st.write("- Black bean and corn tacos with salsa and guacamole")
+        st.write("- Vegan chili with kidney beans, tomatoes, and quinoa")
+    elif "gluten-free" in dietary_restrictions.lower():
+        st.write("Here are some gluten-free meal ideas:")
+        st.write("- Grilled chicken with roasted vegetables and quinoa")
+        st.write("- Baked salmon with sweet potato and steamed broccoli")
+        st.write("- Beef stir-fry with mixed vegetables and brown rice")
+        st.write("- Egg and vegetable scramble with gluten-free toast")
+        st.write("- Turkey and avocado lettuce wraps with a side of fruit")
+    else:
+        st.write("Here are some meal ideas:")
+        st.write("- Grilled chicken with mixed vegetables and brown rice")
+        st.write("- Baked salmon with quinoa and steamed broccoli")
+        st.write("- Beef stir-fry with mixed vegetables and noodles")
+        st.write("- Scrambled eggs with toast and fruit")
+        st.write("- Tuna salad sandwich with a side of chips")
